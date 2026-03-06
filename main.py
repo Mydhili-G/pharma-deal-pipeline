@@ -19,14 +19,11 @@ from dotenv import load_dotenv
 from openai import OpenAI
 from pydantic import BaseModel
 
-load_dotenv()
+load_dotenv(override=True)
 
-client = OpenAI(
-    api_key=os.getenv("OPENROUTER_API_KEY"),
-    base_url="https://openrouter.ai/api/v1",
-)
 
-OUTPUT_FILE = "pharma_deals.json"
+
+OUTPUT_FILE = "output.json"
 
 
 # ── MODELS ───────────────────────────────────────────────────────────────────
@@ -103,6 +100,11 @@ TOOLS = [
 def run_agent() -> list[Deal]:
     """Agentic loop: Claude searches and extracts until it returns final JSON."""
     import requests as req
+
+    client = OpenAI(
+        api_key=os.getenv("OPENROUTER_API_KEY"),
+        base_url="https://openrouter.ai/api/v1",
+    )
 
     messages = [{"role": "system", "content": SYSTEM_PROMPT},
                 {"role": "user", "content": "Find the latest pharma deals. Search all 5 queries then return the JSON."}]
